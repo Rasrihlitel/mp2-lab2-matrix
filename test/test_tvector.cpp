@@ -48,7 +48,6 @@ TEST(TDynamicVector, copied_vector_has_its_own_memory)
 TEST(TDynamicVector, can_get_size)
 {
   TDynamicVector<int> v(4);
-
   EXPECT_EQ(4, v.size());
 }
 
@@ -102,8 +101,8 @@ TEST(TDynamicVector, assign_operator_change_vector_size)
 		a[i] = i;
 	}
 	TDynamicVector<int> b(3);
-	for (int i = 0; i < 5; i++) {
-		a[i] = i;
+	for (int i = 0; i < 3; i++) {
+		b[i] = i;
 	}
 	b = a;
 	EXPECT_EQ(5, b.size());
@@ -111,22 +110,51 @@ TEST(TDynamicVector, assign_operator_change_vector_size)
 
 TEST(TDynamicVector, can_assign_vectors_of_different_size)
 {
-  ADD_FAILURE();
+	TDynamicVector<int> a(5);
+	for (int i = 0; i < 5; i++) {
+		a[i] = i;
+	}
+	TDynamicVector<int> b(3);
+	for (int i = 0; i < 3; i++) {
+		b[i] = i;
+	}
+	ASSERT_NO_THROW(b = a);
 }
 
 TEST(TDynamicVector, compare_equal_vectors_return_true)
 {
-  ADD_FAILURE();
+	TDynamicVector<int> a(5);
+	for (int i = 0; i < 5; i++) {
+		a[i] = i;
+	}
+	TDynamicVector<int> b(5);
+	for (int i = 0; i < 5; i++) {
+		b[i] = i;
+	}
+	ASSERT_TRUE(a == b);
 }
 
 TEST(TDynamicVector, compare_vector_with_itself_return_true)
 {
-  ADD_FAILURE();
+	TDynamicVector<int> a(5);
+	for (int i = 0; i < 5; i++) {
+		a[i] = i;
+	}
+	ASSERT_TRUE(a == a);
+
 }
 
 TEST(TDynamicVector, vectors_with_different_size_are_not_equal)
 {
-  ADD_FAILURE();
+	TDynamicVector<int> a(5);
+	for (int i = 0; i < 5; i++) {
+		a[i] = i;
+	}
+	TDynamicVector<int> b(3);
+	for (int i = 0; i < 3; i++) {
+		b[i] = i;
+	}
+	ASSERT_FALSE(a == b);
 }
 //Могу прибавить скаляр к вектору
 TEST(TDynamicVector, can_add_scalar_to_vector)
@@ -137,8 +165,8 @@ TEST(TDynamicVector, can_add_scalar_to_vector)
 	}
 	int scal = 3;
 	TDynamicVector<int> b = a + scal;
-	EXPECT_EQ(3, a[0]);
-	EXPECT_EQ(4, a[1]);
+	EXPECT_EQ(3, b[0]);
+	EXPECT_EQ(4, b[1]);
 }
 //Могу вычесть скаляр из вектора
 TEST(TDynamicVector, can_subtract_scalar_from_vector)
@@ -149,8 +177,8 @@ TEST(TDynamicVector, can_subtract_scalar_from_vector)
 	}
 	int scal = 3;
 	TDynamicVector<int> b = a - scal;
-	EXPECT_EQ(-3, a[0]);
-	EXPECT_EQ(-2, a[1]);
+	EXPECT_EQ(-3, b[0]);
+	EXPECT_EQ(-2, b[1]);
 }
 //Могу скаляр умножжть на вектор
 TEST(TDynamicVector, can_multiply_scalar_by_vector)
@@ -161,8 +189,8 @@ TEST(TDynamicVector, can_multiply_scalar_by_vector)
 	}
 	int scal = 3;
 	TDynamicVector<int> b = a * scal;
-	EXPECT_EQ(0, a[0]);
-	EXPECT_EQ(3, a[1]);
+	EXPECT_EQ(0, b[0]);
+	EXPECT_EQ(3, b[1]);
 }
 //Могу сложить векторы с одинаковым размером
 TEST(TDynamicVector, can_add_vectors_with_equal_size)
@@ -232,7 +260,7 @@ TEST(TDynamicVector, can_multiply_vectors_with_equal_size)
 		b[i] = i;
 	}
 	int res = a * b;
-	EXPECT_EQ(55, res);
+	EXPECT_EQ(30, res);
 }
 //Не могу провести скалярное произведение с разными размерами
 TEST(TDynamicVector, cant_multiply_vectors_with_not_equal_size)
@@ -247,4 +275,3 @@ TEST(TDynamicVector, cant_multiply_vectors_with_not_equal_size)
 	}
 	ASSERT_ANY_THROW(a * b);
 }
-

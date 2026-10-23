@@ -25,7 +25,7 @@ protected:
 public:
   TDynamicVector(size_t size = 1) : sz(size)
   {
-    if (sz == 0)
+    if (sz == 0 || sz > MAX_VECTOR_SIZE)
       throw out_of_range("Vector size should be greater than zero");
     pMem = new T[sz]();// {}; // У типа T д.б. констуктор по умолчанию
   }
@@ -64,7 +64,7 @@ public:
               sz = v.sz;
               pMem = new T[sz];
           }
-          for (int i = 0; i < ssz; i++) {
+          for (int i = 0; i < sz; i++) {
               pMem[i] = v.pMem[i];
           }
       }
@@ -96,12 +96,12 @@ public:
   // индексация с контролем
   T& at(size_t ind)
   {
-      if (ind < 0 || ind >= sz) throw "Индекс вне диапазона массива";
+      if (ind >= sz) throw "Индекс вне диапазона массива";
       return pMem[ind];
   }
   const T& at(size_t ind) const
   {
-      if (ind < 0 || ind >= sz) throw "Индекс вне диапазона массива";
+      if (ind >= sz) throw "Индекс вне диапазона массива";
       return pMem[ind];
   }
 
@@ -151,7 +151,7 @@ public:
       if (v.sz != sz) throw "Размеры не совпадают";
       TDynamicVector res(*this);
       for (int i = 0; i < sz; i++) {
-          res.pMem[i] += pMem[i];
+          res.pMem[i] += v.pMem[i];
       }
       return res;
   }
@@ -166,7 +166,7 @@ public:
   }
   T operator*(const TDynamicVector& v) noexcept(noexcept(T()))
   {
-      if (v.sz != sz) throw "Размеры не совпадают";
+      if (v.sz != sz) throw "Размеры векторов не совпадают";
       T res = pMem[0] * v.pMem[0];
       for (int i = 1; i < sz; i++) {
           res += pMem[i] * v.pMem[i];
@@ -206,7 +206,8 @@ class TDynamicMatrix : private TDynamicVector<TDynamicVector<T>>
 public:
   TDynamicMatrix(size_t s = 1) : TDynamicVector<TDynamicVector<T>>(s)
   {
-    for (size_t i = 0; i < sz; i++)
+      if (s == 0 || s > MAX_MATRIX_SIZE) throw "Недопустимый размер";
+      for (size_t i = 0; i < sz; i++)
       pMem[i] = TDynamicVector<T>(sz);
   }
 
@@ -215,35 +216,81 @@ public:
   // сравнение
   bool operator==(const TDynamicMatrix& m) const noexcept
   {
+      if (sz != m.sz) return false;
+      for (int i = 0; i < sz; i++) {
+          if (m.pMem[i] != pMem[i]) return false;
+      }
+      return true;
   }
 
   // матрично-скалярные операции
   TDynamicMatrix operator*(const T& val)
   {
+      TDynamicMatrix<T> res(sz);
+      for (int i = 0; i < sz; i++) {
+          res[i] = pMem[i] * val;
+      }
+      return res;
   }
 
   // матрично-векторные операции
   TDynamicVector<T> operator*(const TDynamicVector<T>& v)
   {
+      if (sz != v.size()) throw "Размеры матрицы и вектора не совпадают";
+      TDynamicVector<T> res(sz);
+      for (int i = 0; i < sz; i++) {
+          res.pMem[i] = pMem[i] * v;
+      }
+      return res;
   }
 
   // матрично-матричные операции
   TDynamicMatrix operator+(const TDynamicMatrix& m)
   {
+      if (sz != m.sz) throw "Размеры матриц не совпадают";
+      TDynamicMatrix<T> res(sz);
+      for (int i = 0; i < sz; i++) {
+          res.pMem[i] = pMem[i] + m.pMem[i];
+      }
+      return res;
   }
   TDynamicMatrix operator-(const TDynamicMatrix& m)
   {
+      if (sz != m.sz) throw "Размеры матриц не совпадают";
+      TDynamicMatrix<T> res(sz);
+      for (int i = 0; i < sz; i++) {
+          res.pMem[i] = pMem[i] - m.pMem[i];
+      }
+      return res;
   }
   TDynamicMatrix operator*(const TDynamicMatrix& m)
   {
+      if (sz != m.sz) throw "Размеры матриц не совпадают";
+      TDynamicMatrix<T> res(sz);
+      for (int i = 0; i < sz; i++) {
+          for (int j = 0; j < sz; j++) {
+              for (int k = 0; k < sz; k++) {
+                  res.pMem[i][j] += pMem[i][k] * m.pMem[k][j];
+              }
+          }
+      }
+      return res;
   }
 
   // ввод/вывод
   friend istream& operator>>(istream& istr, TDynamicMatrix& v)
   {
+      for (int i = 0; i < v.sz; i++) {
+          istr >> v.pMem[i];
+      }
+      return istr;
   }
   friend ostream& operator<<(ostream& ostr, const TDynamicMatrix& v)
   {
+      for (int i = 0; i < v.sz; i++) {
+          ostr << v.pMem[i] << std::endl;
+      }
+      return ostr;
   }
 };
 
