@@ -141,7 +141,6 @@ TEST(TDynamicVector, compare_vector_with_itself_return_true)
 		a[i] = i;
 	}
 	ASSERT_TRUE(a == a);
-
 }
 
 TEST(TDynamicVector, vectors_with_different_size_are_not_equal)
@@ -165,8 +164,11 @@ TEST(TDynamicVector, can_add_scalar_to_vector)
 	}
 	int scal = 3;
 	TDynamicVector<int> b = a + scal;
-	EXPECT_EQ(3, b[0]);
-	EXPECT_EQ(4, b[1]);
+	TDynamicVector<int> realB(5);
+	for (int i = 0; i < 5; i++) {
+		realB[i] = a[i] + scal;
+	}
+	ASSERT_TRUE(realB == b);
 }
 //Могу вычесть скаляр из вектора
 TEST(TDynamicVector, can_subtract_scalar_from_vector)
@@ -177,8 +179,11 @@ TEST(TDynamicVector, can_subtract_scalar_from_vector)
 	}
 	int scal = 3;
 	TDynamicVector<int> b = a - scal;
-	EXPECT_EQ(-3, b[0]);
-	EXPECT_EQ(-2, b[1]);
+	TDynamicVector<int> realB(5);
+	for (int i = 0; i < 5; i++) {
+		realB[i] = a[i] - scal;
+	}
+	ASSERT_TRUE(realB == b);
 }
 //Могу скаляр умножжть на вектор
 TEST(TDynamicVector, can_multiply_scalar_by_vector)
@@ -189,8 +194,11 @@ TEST(TDynamicVector, can_multiply_scalar_by_vector)
 	}
 	int scal = 3;
 	TDynamicVector<int> b = a * scal;
-	EXPECT_EQ(0, b[0]);
-	EXPECT_EQ(3, b[1]);
+	TDynamicVector<int> realB(5);
+	for (int i = 0; i < 5; i++) {
+		realB[i] = a[i] * scal;
+	}
+	ASSERT_TRUE(realB == b);
 }
 //Могу сложить векторы с одинаковым размером
 TEST(TDynamicVector, can_add_vectors_with_equal_size)
@@ -204,8 +212,11 @@ TEST(TDynamicVector, can_add_vectors_with_equal_size)
 		b[i] = i;
 	}
 	TDynamicVector<int> res = a + b;
-	EXPECT_EQ(0, res[0]);
-	EXPECT_EQ(2, res[1]);
+	TDynamicVector<int> realRes(5);
+	for (int i = 0; i < 5; i++) {
+		realRes[i] = a[i] + b[i];
+	}
+	ASSERT_TRUE(realRes == res);
 }
 //Не могу сложить векторы с разным размером
 TEST(TDynamicVector, cant_add_vectors_with_not_equal_size)
@@ -232,8 +243,11 @@ TEST(TDynamicVector, can_subtract_vectors_with_equal_size)
 		b[i] = i;
 	}
 	TDynamicVector<int> res = a - b;
-	EXPECT_EQ(0, res[0]);
-	EXPECT_EQ(0, res[1]);
+	TDynamicVector<int> realRes(5);
+	for (int i = 0; i < 5; i++) {
+		realRes[i] = a[i] - b[i];
+	}
+	ASSERT_TRUE(realRes == res);
 }
 //Не могу вычесть векторы с разным размером
 TEST(TDynamicVector, cant_subtract_vectors_with_not_equal_size)

@@ -164,7 +164,7 @@ public:
       }
       return res;
   }
-  T operator*(const TDynamicVector& v) noexcept(noexcept(T()))
+  T operator*(const TDynamicVector& v) //noexcept(noexcept(T()))
   {
       if (v.sz != sz) throw "Размеры векторов не совпадают";
       T res = pMem[0] * v.pMem[0];
@@ -239,7 +239,7 @@ public:
       if (sz != v.size()) throw "Размеры матрицы и вектора не совпадают";
       TDynamicVector<T> res(sz);
       for (int i = 0; i < sz; i++) {
-          res.pMem[i] = pMem[i] * v;
+          res[i] = pMem[i] * v;
       }
       return res;
   }
